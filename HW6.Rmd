@@ -1,0 +1,68 @@
+---
+title: "HW6"
+author: "Chao Chen Yu"
+date: "3/22/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rvest)    
+library(dplyr)    
+library(tidyverse)   
+library(repurrrsive)
+```
+
+1.
+```{r}
+movie100 = read_html("100.html" , encoding = "UTF-8" )
+movie100 %>% html_nodes(".lister-item-header a") %>% html_text() -> Title
+movie100 %>% html_nodes(".ipl-rating-star.small .ipl-rating-star__rating") %>% html_text() -> Ratings
+movie100 %>% html_nodes(".runtime") %>% html_text() -> Runtime
+Runtime <- as.numeric(gsub("min","",Runtime))
+
+top100 = data.frame(Title, Ratings, Runtime)
+head(top100)
+```
+
+2-a
+List within another list either order list or unordered list is called nested list.
+If a list A is the list item of another list B, then list A would be called a nested list.
+
+2-b
+```{r}
+#listviewer::jsonedit(gh_repos)
+```
+There are six main lists in this data and in each main lists have 30 or 26 second sub-lists.
+Also, in each second sub-list have 68 variables. Lastly, in some of variable also have some lists.
+
+2-c
+```{r}
+repos <- tibble(repo = gh_repos)
+repos
+```
+After running this code, we can see that there are six lists but, in each list there are still have some list.
+So we still need to un-nest it.
+
+2-d
+```{r}
+#listviewer::jsonedit(gh_repos)
+```
+As I mentioned above, the nested list configuration can let us to arrange the data methodically. 
+Since sometime we will have the large amount data, so that we can use the nested list configuration to display the content 
+neatly.
+
+The 30 means that it's a first layer and 68 means that it's still have a second layer.
+Go into the detailed configuration "rephos" data -> 6 lists -> 30 lists -> 68 variables -> list (some variable)
+
+
+2-e
+```{r}
+tibble(repo = gh_repos) %>% 
+  unnest_auto(repo) %>% 
+  unnest_auto(repo)
+```
+
